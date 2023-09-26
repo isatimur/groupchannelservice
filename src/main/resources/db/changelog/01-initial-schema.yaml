@@ -1,0 +1,100 @@
+databaseChangeLog:
+  - changeSet:
+      id: "1"
+      author: "author"
+      changes:
+        - createTable:
+            tableName: "channels"
+            columns:
+              - column:
+                  name: "id"
+                  type: "uuid"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "owner_id"
+                  type: "uuid"
+              - column:
+                  name: "name"
+                  type: "varchar(255)"
+              - column:
+                  name: "url"
+                  type: "varchar(255)"
+
+  - changeSet:
+      id: "2"
+      author: "author"
+      changes:
+        - createTable:
+            tableName: "groups"
+            columns:
+              - column:
+                  name: "id"
+                  type: "uuid"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "name"
+                  type: "varchar(255)"
+
+  - changeSet:
+      id: "3"
+      author: "author"
+      changes:
+        - createTable:
+            tableName: "channel_subscribers"
+            columns:
+              - column:
+                  name: "id"
+                  type: "bigserial"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "channel_id"
+                  type: "uuid"
+              - column:
+                  name: "user_id"
+                  type: "uuid"
+        - addForeignKeyConstraint:
+            baseTableName: "channel_subscribers"
+            baseColumnNames: "channel_id"
+            constraintName: "fk_channel_subscribers_channel_id"
+            referencedTableName: "channels"
+            referencedColumnNames: "id"
+        - addUniqueConstraint:
+            tableName: "channel_subscribers"
+            columnNames: "channel_id, user_id"
+            constraintName: "uk_channel_subscribers_channel_id_user_id"
+
+  - changeSet:
+      id: "4"
+      author: "author"
+      changes:
+        - createTable:
+            tableName: "group_participants"
+            columns:
+              - column:
+                  name: "id"
+                  type: "bigserial"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "group_id"
+                  type: "uuid"
+              - column:
+                  name: "user_id"
+                  type: "uuid"
+        - addForeignKeyConstraint:
+            baseTableName: "group_participants"
+            baseColumnNames: "group_id"
+            constraintName: "fk_group_participants_group_id"
+            referencedTableName: "groups"
+            referencedColumnNames: "id"
+        - addUniqueConstraint:
+            tableName: "group_participants"
+            columnNames: "group_id, user_id"
+            constraintName: "uk_group_participants_group_id_user_id"
